@@ -1,4 +1,5 @@
 import { useState } from "react";
+import CreateGame from "../components/CreateGame";
 
 function HomePage() {
   const [roomId, setRoomId] = useState("");
@@ -11,7 +12,6 @@ function HomePage() {
   const handleChangeRoomId = (event) => {
     setRoomId(event.target.value);
   };
-
   return (
     <div className="app-container">
       <div className="btns-container">
