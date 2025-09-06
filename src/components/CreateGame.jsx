@@ -1,12 +1,13 @@
 import { useState } from "react";
 
-function CreateGame() {
+function CreateGame({ onBackToHome }) {
   const [currentStep, setCurrentStep] = useState(1); // 1 = טופס יצירה, 2 = קוד חדר
   const [gameSettings, setGameSettings] = useState({
     maxPlayers: 4,
     spotifyPlaylist: "",
   });
   const [roomCode, setRoomCode] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const generateRoomCode = () => {
     // פונקציה זמנית לגנרציית קוד - בעתיד יבוא מהסרבר
@@ -44,9 +45,20 @@ function CreateGame() {
     setCurrentStep(1);
   };
 
-  const handleStartWaiting = () => {
-    // כאן נעבור למסך ההמתנה למשתתפים
-    console.log("מעבר למסך המתנה למשתתפים");
+  const handleBackToHome = () => {
+    if (onBackToHome) {
+      onBackToHome();
+    }
+  };
+
+  const handleCopyRoomCode = async () => {
+    try {
+      await navigator.clipboard.writeText(roomCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000); // אחרי 2 שניות חוזר לאייקון העתקה
+    } catch (err) {
+      console.error("נכשל בהעתקה:", err);
+    }
   };
 
   // מסך הצגת קוד החדר
@@ -55,35 +67,38 @@ function CreateGame() {
       <div className="app-container">
         <div className="btns-container">
           <button className="back-btn" onClick={handleBackToForm}>
-            חזור
+            ערוך הגדרות
+          </button>
+          <button className="back-btn" onClick={handleBackToHome}>
+            חזור לדף הבית
           </button>
         </div>
 
         <div className="form-container">
-          <h1 className="welcome-title">המשחק נוצר! 🎉</h1>
+          <h1 className="welcome-title">🎉המשחק נוצר</h1>
 
           <div className="room-code-container">
-            <h2 className="room-code-label">קוד החדר:</h2>
+            <button className="copy-btn" onClick={handleCopyRoomCode}>
+              {copied ? "✔️ הועתק" : "📋 העתק"}
+            </button>
+            <h2 className="room-code-label">:קוד החדר</h2>
             <div className="room-code">{roomCode}</div>
+
             <p className="room-code-instruction">
               שתפו את הקוד הזה עם החברים שלכם כדי שיוכלו להצטרף
             </p>
           </div>
 
           <div className="game-settings-summary">
-            <h3>הגדרות המשחק:</h3>
+            <h3>:הגדרות המשחק</h3>
             <div className="setting-item">
-              <strong>מספר משתתפים מקסימלי:</strong> {gameSettings.maxPlayers}
+              <strong>:מספר משתתפים מקסימלי</strong> {gameSettings.maxPlayers}
             </div>
             <div className="setting-item">
               <strong>פלייליסט:</strong>{" "}
               {gameSettings.spotifyPlaylist || "פלייליסט ברירת מחדל של המערכת"}
             </div>
           </div>
-
-          <button className="start-waiting-btn" onClick={handleStartWaiting}>
-            🕐 התחל להמתין למשתתפים
-          </button>
         </div>
       </div>
     );
@@ -92,6 +107,12 @@ function CreateGame() {
   // מסך טופס יצירת המשחק
   return (
     <div className="app-container">
+      <div className="btns-container">
+        <button className="back-btn" onClick={handleBackToHome}>
+          חזור לדף הבית
+        </button>
+      </div>
+
       <div className="form-container">
         <h1 className="welcome-title">צור משחק חדש 🎮</h1>
 
@@ -131,7 +152,7 @@ function CreateGame() {
           </div>
 
           <button onClick={handleCreateGame} className="create-game-submit-btn">
-            🚀 צור את המשחק
+            צור משחק
           </button>
         </div>
       </div>
