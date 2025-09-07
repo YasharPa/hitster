@@ -1,18 +1,20 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function CreateGame({ onBackToHome }) {
-  const [currentStep, setCurrentStep] = useState(1); // 1 = טופס יצירה, 2 = קוד חדר
+function CreateGame() {
+  const navigation = useNavigate();
   const [gameSettings, setGameSettings] = useState({
     maxPlayers: 4,
     spotifyPlaylist: "",
+    roomId: "",
   });
-  const [roomCode, setRoomCode] = useState("");
-  const [copied, setCopied] = useState(false);
+  const [, setRoomCode] = useState("");
 
   const generateRoomCode = () => {
     // פונקציה זמנית לגנרציית קוד - בעתיד יבוא מהסרבר
     const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let result = "";
+
     for (let i = 0; i < 6; i++) {
       result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
@@ -37,74 +39,16 @@ function CreateGame({ onBackToHome }) {
     // כאן נשלח בעתיד בקשה לסרבר ליצירת החדר
     const generatedCode = generateRoomCode();
     setRoomCode(generatedCode);
-    setCurrentStep(2);
     console.log("נוצר משחק עם הגדרות:", gameSettings);
-  };
-
-  const handleBackToForm = () => {
-    setCurrentStep(1);
+    navigation(`/game/${generatedCode}`, {
+      state: { gameSettings, roomId: generatedCode },
+    });
   };
 
   const handleBackToHome = () => {
-    if (onBackToHome) {
-      onBackToHome();
-    }
+    navigation(`/`);
   };
 
-  const handleCopyRoomCode = async () => {
-    try {
-      await navigator.clipboard.writeText(roomCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000); // אחרי 2 שניות חוזר לאייקון העתקה
-    } catch (err) {
-      console.error("נכשל בהעתקה:", err);
-    }
-  };
-
-  // מסך הצגת קוד החדר
-  if (currentStep === 2) {
-    return (
-      <div className="app-container">
-        <div className="btns-container">
-          <button className="back-btn" onClick={handleBackToForm}>
-            ערוך הגדרות
-          </button>
-          <button className="back-btn" onClick={handleBackToHome}>
-            חזור לדף הבית
-          </button>
-        </div>
-
-        <div className="form-container">
-          <h1 className="welcome-title">🎉המשחק נוצר</h1>
-
-          <div className="room-code-container">
-            <button className="copy-btn" onClick={handleCopyRoomCode}>
-              {copied ? "✔️ הועתק" : "📋 העתק"}
-            </button>
-            <h2 className="room-code-label">:קוד החדר</h2>
-            <div className="room-code">{roomCode}</div>
-
-            <p className="room-code-instruction">
-              שתפו את הקוד הזה עם החברים שלכם כדי שיוכלו להצטרף
-            </p>
-          </div>
-
-          <div className="game-settings-summary">
-            <h3>:הגדרות המשחק</h3>
-            <div className="setting-item">
-              <strong>:מספר משתתפים מקסימלי</strong> {gameSettings.maxPlayers}
-            </div>
-            <div className="setting-item">
-              <strong>פלייליסט:</strong>{" "}
-              {gameSettings.spotifyPlaylist || "פלייליסט ברירת מחדל של המערכת"}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // מסך טופס יצירת המשחק
   return (
     <div className="app-container">
       <div className="btns-container">
@@ -148,7 +92,7 @@ function CreateGame({ onBackToHome }) {
           </div>
 
           <div className="playlist-note">
-            💡 אם לא תציינו פלייליסט, המערכת תשתמש בפלייליסט ברירת המחדל שלה
+            אם לא תציינו פלייליסט, המערכת תשתמש בפלייליסט ברירת המחדל שלה
           </div>
 
           <button onClick={handleCreateGame} className="create-game-submit-btn">
