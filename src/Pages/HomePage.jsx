@@ -1,25 +1,15 @@
 import { useState } from "react";
-import CreateGame from "../components/CreateGame";
-
+import { useNavigate } from "react-router-dom";
 function HomePage() {
-  const [currentView, setCurrentView] = useState("home"); // "home" או "createGame"
   const [roomId, setRoomId] = useState("");
   const [userName, setUserName] = useState("");
-
+  const navigate = useNavigate();
   const handleChangeName = (event) => {
     setUserName(event.target.value);
   };
 
   const handleChangeRoomId = (event) => {
     setRoomId(event.target.value);
-  };
-
-  const handleCreateGameClick = () => {
-    setCurrentView("createGame");
-  };
-
-  const handleBackToHome = () => {
-    setCurrentView("home");
   };
 
   const handleStartGame = (e) => {
@@ -31,17 +21,14 @@ function HomePage() {
       alert("אנא מלא את כל השדות");
     }
   };
-
-  // אם המשתמש בחר ליצור משחק, הצג את קומפוננטת CreateGame
-  if (currentView === "createGame") {
-    return <CreateGame onBackToHome={handleBackToHome} />;
-  }
-
+  const handleCreateGame = () => {
+    navigate(`/create-game`);
+  };
   // המסך הראשי
   return (
     <div className="app-container">
       <div className="btns-container">
-        <button className="create-game-btn" onClick={handleCreateGameClick}>
+        <button className="create-game-btn" onClick={handleCreateGame}>
           צור משחק
         </button>
       </div>

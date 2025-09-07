@@ -18,6 +18,7 @@ function App() {
         <Route path="/game/:roomId" element={<WatingRoomPage />} />
         {/* כל נתיב לא קיים יחזיר לדף הבית */}
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/game" element={<GamePage />} />
       </Routes>
     </Router>
   );

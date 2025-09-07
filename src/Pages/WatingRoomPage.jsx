@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-/// להוסיף את הקומפוננטה של המשחק
+// בהמשך להוסיף שנעבור למשחק עצמו רק לאחר שכולם הצטרפו למשחק
 function WatingRoomPage() {
   const [copied, setCopied] = useState(false);
   const navigate = useNavigate();
   const { state } = useLocation();
 
+  console.log("state in waiting room:", state);
+
   const handleCopyRoomCode = async () => {
     try {
-      await navigator.clipboard.writeText(state.roomId);
+      await navigator.clipboard.writeText(state?.gameSettings?.roomId);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -21,6 +23,7 @@ function WatingRoomPage() {
   const handleBackToHome = () => {
     navigate(`/`);
   };
+
   return (
     <div className="app-container">
       <div className="btns-container">
@@ -40,7 +43,7 @@ function WatingRoomPage() {
             {copied ? "✔️ הועתק" : "📋 העתק"}
           </button>
           <h2 className="room-code-label">:קוד החדר</h2>
-          <div className="room-code">{state.roomId}</div>
+          <div className="room-code">{state?.gameSettings?.roomId}</div>
 
           <p className="room-code-instruction">
             שתפו את הקוד הזה עם החברים שלכם כדי שיוכלו להצטרף
@@ -51,11 +54,11 @@ function WatingRoomPage() {
           <h3>:הגדרות המשחק</h3>
           <div className="setting-item">
             <strong>מספר משתתפים מקסימלי:</strong>{" "}
-            {state.gameSettings.maxPlayers}
+            {state?.gameSettings?.maxPlayers}
           </div>
           <div className="setting-item">
             <strong>פלייליסט:</strong>{" "}
-            {state.gameSettings.spotifyPlaylist ||
+            {state?.gameSettings?.spotifyPlaylist ||
               "פלייליסט ברירת מחדל של המערכת"}
           </div>
         </div>

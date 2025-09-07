@@ -8,7 +8,6 @@ function CreateGame() {
     spotifyPlaylist: "",
     roomId: "",
   });
-  const [, setRoomCode] = useState("");
 
   const generateRoomCode = () => {
     // פונקציה זמנית לגנרציית קוד - בעתיד יבוא מהסרבר
@@ -38,10 +37,11 @@ function CreateGame() {
   const handleCreateGame = () => {
     // כאן נשלח בעתיד בקשה לסרבר ליצירת החדר
     const generatedCode = generateRoomCode();
-    setRoomCode(generatedCode);
+    const updatedGameSettings = { ...gameSettings, roomId: generatedCode };
+
     console.log("נוצר משחק עם הגדרות:", gameSettings);
     navigation(`/game/${generatedCode}`, {
-      state: { gameSettings, roomId: generatedCode },
+      state: { gameSettings: updatedGameSettings },
     });
   };
 
@@ -58,7 +58,7 @@ function CreateGame() {
       </div>
 
       <div className="form-container">
-        <h1 className="welcome-title">צור משחק חדש 🎮</h1>
+        <h1 className="welcome-title">🎮 צור משחק חדש</h1>
 
         <div className="LoginFormContainer">
           <div className="form-group">

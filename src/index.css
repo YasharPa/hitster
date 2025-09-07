@@ -225,14 +225,14 @@ input[type="url"]::placeholder {
   font-weight: bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(120, 200, 65, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 155, 47, 0.3);
   transform: translateY(0);
   margin-top: 0.5rem;
 }
 
 .create-game-submit-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(120, 200, 65, 0.4);
+  box-shadow: 0 8px 25px rgba(255, 155, 47, 0.4);
 }
 
 .create-game-submit-btn:active {
